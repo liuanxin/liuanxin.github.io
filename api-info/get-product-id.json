@@ -1,0 +1,1 @@
+{"msg":"返回说明","data":{"id":123,"name":"张三","gender":0,"productTypes":["Discount"],"userTypes":[10],"ones":[{"oneId":111,"one":"<span style='color:red;'>富文本</span>"}],"twos":{"0":{"twoId":222,"twoArray":["一二三"]}},"threes":{"?":[{"threeId":222,"threeList":["三二一"]}]},"createTime":"2018-01-01 12:13:14","updateTime":"2019-01-01"}}
