@@ -5,6 +5,7 @@
     <title>api document</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jQuery-Validation-Engine/2.6.4/validationEngine.jquery.min.css">
@@ -36,9 +37,9 @@
         }
         textarea {
             min-height: 120px;
-            height: 100%;
+            height: 100% !important;
             min-width: 180px;
-            width: 100%;
+            width: 100% !important;
         }
         input[type=button] {
             width: 180px;
@@ -426,20 +427,20 @@
                             {{
                             var globalParamList = it.tokenList || [];
                             var urlParamList = url.paramList || [];
-                            var paramList = (url.useGlobalParam === '1') ? globalParamList.concat(urlParamList) : urlParamList;
+                            var paramList = (url.useGlobalParam === '1' || url.useGlobalParam === 1) ? globalParamList.concat(urlParamList) : urlParamList;
 
                             var hasDesc = false, hasFile = false, hasHeader = false;
                             for (var i = 0; i < paramList.length; i++) {
                                 var paramDesc = paramList[i].desc;
                                 if (paramDesc !== undefined && paramDesc !== null && paramDesc !== '') { hasDesc = true; }
 
-                                if (paramList[i].hasFile === '1') { hasFile = true; }
-                                if (paramList[i].paramType === '1') { hasHeader = true; }
+                                if (paramList[i].hasFile === '1' || paramList[i].hasFile === 1) { hasFile = true; }
+                                if (paramList[i].paramType === '1' || paramList[i].paramType === 1) { hasHeader = true; }
                             }
                             var textNum = 0;
                             }}
                             <form class="module-api-info-param"{{? url.method}} method="{{= url.method}}"{{?}}
-                                  {{? url.url}} action="{{= url.url}}"{{?}} data-test="{{= url.id}}"{{? hasFile}} enctype="multipart/form-data"{{?}}>
+                                  {{? url.url}} action="{{= url.url}}"{{?}} data-id="{{= url.id}}"{{? hasFile}} enctype="multipart/form-data"{{?}}>
                                 {{? paramList && paramList.length > 0}}
                                 <div class="bottom-table panel panel-default">
                                     <table class="table table-striped table-bordered table-hover table-condensed">
@@ -455,40 +456,44 @@
                                         </thead>
                                         <tbody>
                                         {{~ paramList  :param:paramIndex}}
-                                        <tr{{? param.hasMust === '1'}} class="bold"{{?}}{{? param.style && param.style !== ''}} style="{{= param.style}}"{{?}}>
+                                        {{
+                                        var hasTextarea = param.hasTextarea === '1' || param.hasTextarea === 1;
+                                        var arr = [];
+                                        var hasMust;
+                                        if (param.hasMust === '1' || param.hasMust === 1) { hasMust = true; arr.push('required'); }
+                                        else { hasMust = false; }
+
+                                        var dataType = (param.dataType || '').toLowerCase();
+                                        if (dataType === 'int' || dataType === 'long') { arr.push('custom[integer]'); }
+                                        else if (dataType === 'float' || dataType === 'double') { arr.push('custom[number]'); }
+                                        else if (dataType === 'email') { arr.push('custom[email]'); }
+                                        else if (dataType === 'url') { arr.push('custom[url]'); }
+                                        else if (dataType === 'ipv4') { arr.push('custom[ipv4]'); }
+
+                                        var arrJoin = arr.filter(function(e){ return e !== undefined && e !== null && e !== ''; }).join(',');
+
+                                        var validateClass = (arrJoin !== undefined && arrJoin !== null && arrJoin !== '') ? (' validate[' + arrJoin + ']') : '';
+                                        var tokenClass = (param.hasToken === '1' || param.hasToken === 1) ? ' has-token' : '';
+                                        var header = (param.paramType === '1' || param.paramType === 1) ? ' header="true"' : '';
+                                        var example = localStorage.getItem(param.name) || param.example || '';
+
+                                        var enumRegexExec = /^enum\((.*?)\)$/.exec(param.dataType);
+                                        var enumInfo = (Array.isArray(enumRegexExec) && enumRegexExec.length > 1) ? it.enumInfo[enumRegexExec[1]] : '';
+                                        }}
+                                        <tr{{? hasMust}} class="bold"{{?}}{{? param.style && param.style !== ''}} style="{{= param.style}}"{{?}}>
                                             <td class="text-left">{{= param.name || ''}}</td>
                                             <td class="text-left" style="height: inherit;">
-                                                {{
-                                                var arr = [];
-                                                if (param.hasMust === '1') { arr.push('required'); }
-
-                                                if (param.dataType === 'int' || param.dataType === 'long') { arr.push('custom[integer]'); }
-                                                else if (param.dataType === 'float' || param.dataType === 'double') { arr.push('custom[number]'); }
-                                                else if (param.dataType === 'email') { arr.push('custom[email]'); }
-                                                else if (param.dataType === 'url') { arr.push('custom[url]'); }
-                                                else if (param.dataType === 'ipv4') { arr.push('custom[ipv4]'); }
-
-                                                var arrJoin = arr.filter(function(e){ return e !== undefined && e !== null && e !== ''; }).join(',');
-
-                                                var validateClass = (arrJoin !== undefined && arrJoin !== null && arrJoin !== '') ? (' validate[' + arrJoin + ']') : '';
-                                                var tokenClass = (param.hasToken === '1') ? ' has-token' : '';
-                                                var header = (param.paramType === '1') ? ' header="true"' : '';
-                                                var example = localStorage.getItem(param.name) || param.example || '';
-
-                                                var enumRegexExec = /^enum\((.*?)\)$/.exec(param.dataType);
-                                                var enumInfo = (Array.isArray(enumRegexExec) && enumRegexExec.length > 1) ? it.enumInfo[enumRegexExec[1]] : '';
-                                                }}
-                                                {{? param.dataType === 'file'}}
+                                                {{? dataType === 'file'}}
                                                 <div class="input-group">
                                                     <label class="input-group-btn">
-                                                            <span class="btn btn-default{{? param.hasMust === '1'}} bold{{?}}">
-                                                                Browse...
-                                                                <input type="file" name="{{= param.name || ''}}" style="display: none;">
-                                                            </span>
+                                                        <span class="btn btn-default{{? hasMust}} bold{{?}}">
+                                                            Browse...
+                                                            <input type="file" name="{{= param.name || ''}}" style="display: none;">
+                                                        </span>
                                                     </label>
-                                                    <input type="text" class="form-control{{? param.hasMust === '1'}} bold{{?}}{{= validateClass}}" readonly="readonly">
+                                                    <input type="text" class="form-control{{? hasMust}} bold{{?}}{{= validateClass}}" readonly="readonly">
                                                 </div>
-                                                {{?? param.hasTextarea === '1'}}
+                                                {{?? hasTextarea}}
                                                 <textarea class="form-control{{= validateClass}}{{= tokenClass}}" name="{{= param.name || ''}}"{{= header}}>{{= example}}</textarea>
                                                 {{?? enumInfo !== undefined && enumInfo !== null && enumInfo !== ''}}
                                                 <select class="form-control{{= validateClass}}{{= tokenClass}}" name="{{= param.name || ''}}"{{= header}}>
@@ -501,12 +506,13 @@
                                                     {{ } }}
                                                     {{?}}
                                                 </select>
-                                                {{?? param.showDataType === 'date' || param.dataType === 'date'}}
+                                                {{?? (param.showDataType || '').toLowerCase() === 'date' || dataType === 'date'}}
+                                                {{ var hasFormat = param.datePattern !== undefined && param.datePattern !== null && param.datePattern !== '';}}
                                                 <div class="input-group date form-datetime">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                    <input type="text" class="form-control{{? param.hasMust === '1'}} bold{{?}}{{= validateClass}}{{= tokenClass}}"
-                                                           data-date-format="{{= param.datePattern || ''}}" readonly="readonly"
-                                                           name="{{= param.name || ''}}"{{= header}}/>
+                                                    <input type="text" name="{{= param.name || ''}}"{{= header}}
+                                                           class="form-control{{? hasMust}} bold{{?}}{{= validateClass}}{{= tokenClass}}"
+                                                           readonly="readonly"{{? hasFormat}} data-date-format="{{= param.datePattern}}"{{?}}/>
                                                 </div>
                                                 {{??}}
                                                 {{ textNum++; }}
@@ -515,13 +521,13 @@
                                                        name="{{= param.name || ''}}"{{= header}} value="{{= example}}"/>
                                                 {{?}}
                                             </td>
-                                            <td class="text-left">{{= param.hasMust === '1' ? 'Yes' : 'No'}}</td>
+                                            <td class="text-left">{{= hasMust ? 'Yes' : 'No'}}</td>
                                             <td class="text-left">{{=
-                                                param.showDataType !== undefined && param.showDataType !== null && param.showDataType !== ''
-                                                ? param.showDataType
-                                                : (param.dataType !== undefined && param.dataType !== null && param.dataType !== '' ? param.dataType : '')
+                                                param.showDataType && param.showDataType !== ''
+                                                    ? param.showDataType
+                                                    : (param.dataType && param.dataType !== '' ? param.dataType : '')
                                             }}</td>
-                                            {{? hasHeader}}<td class="text-left">{{= (param.paramType || '') === '1' ? 'Header' : 'Query'}}</td>{{?}}
+                                            {{? hasHeader}}<td class="text-left">{{= (param.paramType === '1' || param.paramType === 1) ? 'Header' : 'Query'}}</td>{{?}}
                                             {{? hasDesc}}<td class="text-left wrap">{{= param.desc || ''}}</td>{{?}}
                                         </tr>
                                         {{~}}
@@ -532,7 +538,7 @@
                                 <p>
                                     /* When there is only one input text on the form, adding an invisible input can disable the carriage return event for that input. */
                                     {{? textNum === 1 }}<input type="text" style="display: none;"/>{{?}}
-                                    <input class="btn" type="button" value="Request backend" requestBody="{{= url.requestBody}}"/>
+                                    <input class="btn" type="button" value="Request backend"{{? url.requestBody === '1' || url.requestBody === 1}} requestBody="1"{{?}}/>
                                 </p>
                                 <div class="curl"><pre class="src src-json"></pre></div>
                                 <div class="response"><pre class="src src-json"></pre></div>
@@ -911,7 +917,7 @@ $(function() {
         var method = $form.attr('method');
         var url = $form.attr('action');
         var requestBody = $btn.attr('requestBody');
-        var hasRequestBody = requestBody === true || requestBody === 'true';
+        var hasRequestBody = requestBody === '1' || requestBody === 1;
 
         var map = objectifyForm($form);
         var params = map[0];
@@ -1011,7 +1017,7 @@ $(function() {
 
         {
             var settings = {
-                url: '/api-info-en/' + $form.attr('data-test') + '.json',
+                url: '/api-info-en/' + $form.attr('test-id') + '.json',
                 method: 'GET',
                 beforeSend: function(request) {
                     if (Object.getOwnPropertyNames(headers).length > 0) {
@@ -1046,7 +1052,7 @@ $(function() {
                 settings['contentType'] = false;
             } else {
                 if (hasRequestBody) {
-                    if ('GET' === method.toUpperCase()) { // https://stackoverflow.com/questions/978061/http-get-with-request-body
+                    if ('GET' === method.toUpperCase()) {
                         response.find('pre').html("<span class='red'>Browser cannot send RequestBody parameter via a GET request" +
                             "(It's possible to use the above cURL), please contact the backend change to POST!</span>");
                         response.show();
