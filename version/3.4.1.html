@@ -491,12 +491,12 @@
                                                             <input type="file" name="{{= param.name || ''}}" style="display: none;">
                                                         </span>
                                                     </label>
-                                                    <input{{? paramIndex === 1 ? ' data-prompt-position="topLeft"' : ''}} type="text" class="form-control{{? hasMust}} bold{{?}}{{= validateClass}}" readonly="readonly">
+                                                    <input{{? paramIndex === 0 ? ' data-prompt-position="topLeft"' : ''}} type="text" class="form-control{{? hasMust}} bold{{?}}{{= validateClass}}" readonly="readonly">
                                                 </div>
                                                 {{?? hasTextarea}}
-                                                <textarea class="form-control{{= validateClass}}{{= tokenClass}}" name="{{= param.name || ''}}"{{= header}}>{{= example}}</textarea>
+                                                <textarea{{? paramIndex === 0 ? ' data-prompt-position="topLeft"' : ''}} class="form-control{{= validateClass}}{{= tokenClass}}" name="{{= param.name || ''}}"{{= header}}>{{= example}}</textarea>
                                                 {{?? enumInfo !== undefined && enumInfo !== null && enumInfo !== ''}}
-                                                <select{{? paramIndex === 1 ? ' data-prompt-position="topLeft"' : ''}} class="form-control{{= validateClass}}{{= tokenClass}}" name="{{= param.name || ''}}"{{= header}}>
+                                                <select{{? paramIndex === 0 ? ' data-prompt-position="topLeft"' : ''}} class="form-control{{= validateClass}}{{= tokenClass}}" name="{{= param.name || ''}}"{{= header}}>
                                                     <option></option>
                                                     {{? Array.isArray(enumInfo) }}
                                                     {{~ enumInfo  :e}}<option{{? example === e}} selected="selected"{{?}}>{{= e}}</option>{{~}}
@@ -510,13 +510,13 @@
                                                 {{ var hasFormat = param.datePattern !== undefined && param.datePattern !== null && param.datePattern !== '';}}
                                                 <div class="input-group date form-datetime">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                                    <input{{? paramIndex === 1 ? ' data-prompt-position="topLeft"' : ''}} type="text" name="{{= param.name || ''}}"{{= header}}
+                                                    <input{{? paramIndex === 0 ? ' data-prompt-position="topLeft"' : ''}} type="text" name="{{= param.name || ''}}"{{= header}}
                                                            class="form-control{{? hasMust}} bold{{?}}{{= validateClass}}{{= tokenClass}}"
                                                            readonly="readonly"{{? hasFormat}} data-date-format="{{= param.datePattern}}"{{?}}/>
                                                 </div>
                                                 {{??}}
                                                 {{ textNum++; }}
-                                                <input{{? paramIndex === 1 ? ' data-prompt-position="topLeft"' : ''}} class="form-control{{= validateClass}}{{= tokenClass}}"
+                                                <input{{? paramIndex === 0 ? ' data-prompt-position="topLeft"' : ''}} class="form-control{{= validateClass}}{{= tokenClass}}"
                                                        type="{{= (param.name || '').toLowerCase() === 'password' ? 'password' : 'text'}}"
                                                        name="{{= param.name || ''}}"{{= header}} value="{{= example}}"/>
                                                 {{?}}
