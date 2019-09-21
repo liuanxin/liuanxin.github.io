@@ -909,7 +909,7 @@ $(function() {
         curl.hide();
         response.hide();
 
-        var flag = $form.validationEngine('validate', { scroll: false });
+        var flag = $form.validationEngine('validate', { promptPosition : "topLeft", scroll: false });
         if (!flag) {
             return;
         }
