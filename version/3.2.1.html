@@ -737,7 +737,7 @@ if (isNotBlank(projectDomain) && locationDomain !== projectDomain && !projectDom
 }
 
 var $main = $('.col-md-9');
-$.get(projectDomain + '/api-info-en.json').done(function(data) {
+$.get(projectDomain + '/en/api-info.json').done(function(data) {
     if (isNotBlank(data)) {
         var documentInfo;
         if (typeof data === 'string') {
@@ -1017,7 +1017,7 @@ $(function() {
 
         {
             var settings = {
-                url: '/api-info-en/' + $form.attr('test-id') + '.json',
+                url: '/en/' + $form.attr('test-id') + '.json',
                 method: 'GET',
                 beforeSend: function(request) {
                     if (Object.getOwnPropertyNames(headers).length > 0) {
