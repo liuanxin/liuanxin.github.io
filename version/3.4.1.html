@@ -511,7 +511,7 @@
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                                     <input{{= paramIndex === 0 ? ' data-prompt-position="topLeft"' : ''}} type="text" name="{{= param.name || ''}}"{{= header}}
                                                            class="form-control{{? hasMust}} bold{{?}}{{= validateClass}}{{= tokenClass}}"
-                                                           readonly="readonly"{{? hasFormat}} data-date-format="{{= param.datePattern}}"{{?}}/>
+                                                           {{? hasFormat}} data-date-format="{{= param.datePattern.replace(/yy/g, 'YY')}}"{{?}}/>
                                                 </div>
                                                 {{??}}
                                                 {{ textNum++; }}
