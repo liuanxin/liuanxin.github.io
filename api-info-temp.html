@@ -783,12 +783,10 @@ function loadData() {
 }
 
 $(function () {
-  var changed = false;
-  var firstLink = true;
+  var linked = 1;
   $(document.body).scrollspy({target: '.bs-docs-sidebar'});
   $(document).on('change', '.project-choose', function () {
-    firstLink = true;
-    changed = true;
+    linked = 2;
     var projectUrl = $(this).find('option:selected').data('url');
     var hash = isBlank(projectUrl) ? '' : ('?p=' + $(this).val());
     history.replaceState({api: $(this).val()}, '', location.pathname + hash);
@@ -866,8 +864,8 @@ $(function () {
           if ($header.hasClass(scrolled) !== true) {
             history.replaceState({api: 'index'}, '', url);
           }
-          if (firstLink && !changed) {
-            firstLink = false;
+          if (linked === 1) {
+            linked = 0;
             var $anchor = $(currentHash);
             if ($anchor.length > 0) {
               var $li = $('a[href="' + currentHash + '"]').parents('li');
@@ -876,7 +874,9 @@ $(function () {
               }
             }
           }
-          changed = false;
+          if (linked === 2) {
+            linked = 1
+          }
         } else {
           history.replaceState({api: navHash}, '', url + navHash);
         }
