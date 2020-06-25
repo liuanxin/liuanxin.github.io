@@ -662,6 +662,10 @@ function isNotBlank(str) {
   return !isBlank(str);
 }
 
+function defaultValue(obj1, obj2) {
+  return isBlank(obj1) ? obj2 : obj1;
+}
+
 function addLine(html) {
   if (isBlank(html)) {
     return '';
@@ -854,8 +858,8 @@ $(function () {
           $bar.css(heightProperty, 'calc(100vh - ' + (headerHeight + topBottomHeight) + 'px)');
         }
       }
-      var navHash = $nav.find('.active > a:last').attr('href');
-      var currentHash = location.hash;
+      var navHash = defaultValue($nav.find('.active > a:last').attr('href'), '');
+      var currentHash = defaultValue(location.hash, '');
       if (navHash !== currentHash) {
         var url = location.pathname + location.search;
         if (isBlank(navHash)) {
