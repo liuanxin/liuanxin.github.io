@@ -858,8 +858,8 @@ $(function () {
           $bar.css(heightProperty, 'calc(100vh - ' + (headerHeight + topBottomHeight) + 'px)');
         }
       }
-      var navHash = defaultValue($nav.find('.active > a:last').attr('href'), '');
-      var currentHash = defaultValue(location.hash, '');
+      var navHash = $nav.find('.active > a:last').attr('href');
+      var currentHash = location.hash;
       if (navHash !== currentHash) {
         var url = location.pathname + location.search;
         if (isBlank(navHash)) {
