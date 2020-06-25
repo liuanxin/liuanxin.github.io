@@ -856,7 +856,7 @@ $(function () {
       }
       var navHash = $nav.find('.active > a:last').attr('href');
       var currentHash = location.hash;
-      if (isNotBlank(navHash) && isNotBlank(currentHash) && navHash !== currentHash) {
+      if (navHash !== currentHash) {
         var url = location.pathname + location.search;
         if (isBlank(navHash)) {
           if ($header.hasClass(scrolled) !== true) {
