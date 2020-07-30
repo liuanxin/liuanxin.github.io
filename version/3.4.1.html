@@ -915,7 +915,13 @@ $(function() {
         }
 
         var method = $form.attr('method');
+        if (isBlank(method)) {
+            method = 'GET';
+        }
         var url = $form.attr('action');
+        if (isBlank(url)) {
+            url = '';
+        }
         var requestBody = $btn.attr('requestBody');
         var hasRequestBody = requestBody === '1' || requestBody === 1;
 
