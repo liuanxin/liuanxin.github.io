@@ -224,7 +224,7 @@
             font-weight: 500;
         }
         @media print {
-            pre .line-number, .print-nil {
+            .print-nil {
                 display: none;
             }
             pre, .text-left, .panel {
@@ -232,6 +232,9 @@
             }
             pre, .text-left {
                 white-space: pre-wrap;
+            }
+            pre .source-code {
+                max-height: none;
             }
         }
         @media (max-width: 992px), print {
